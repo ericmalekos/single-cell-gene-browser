@@ -1,0 +1,14 @@
+# generated stores and downloads
+app_data/
+downloads/
+# deposits placed or symlinked here by the user (see data/README.md)
+data/*
+!data/README.md
+# machine-specific settings
+config.local.yaml
+# python
+__pycache__/
+*.egg-info/
+build/
+dist/
+.pytest_cache/

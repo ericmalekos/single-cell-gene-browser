@@ -1,0 +1,18 @@
+# Copy to config.local.yaml (git-ignored) and set the paths that differ on your machine.
+# Any key of config.yaml can be overridden; relative paths resolve against this directory.
+
+deposits:
+  immdict: /path/to/erv_immdict_deposit        # mouse Immune Dictionary + human Cytokine Dictionary deposit
+  perturbseq: /path/to/geiger_bmdc_deposit     # BMDC E3-ligase Perturb-seq deposit
+
+tabula_muris:
+  # global_rds: /path/to/sce_global_umap_clusters.rds   # skip the 5.1 GB download if you already have it
+  # immune_rds: /path/to/sce_subset_all_ages_pca_umap.rds
+  # map_images:                                    # your own labelled UMAPs, instead of the drawn ones
+  #   immune: /path/to/immune_cells_labelled.png
+
+# annotations:                                   # reuse local copies instead of downloading
+#   mouse_m38_gtf: /path/to/gencode.vM38.primary_assembly.annotation.gtf.gz
+#   human_v43_gtf: /path/to/gencode.v43.annotation.gtf.gz
+
+# app_data: /shared/scbrowser/app_data           # e.g. a prebuilt copy shared by the lab

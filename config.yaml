@@ -1,0 +1,64 @@
+# Default settings, tracked in git. Put machine-specific paths in config.local.yaml (same keys, any subset;
+# see config.local.example.yaml). Relative paths resolve against this file's directory.
+# Environment variables: SCBROWSER_CONFIG (another config file), SCBROWSER_DATA (another app_data directory).
+app_data: app_data          # generated stores; the app reads only this directory
+downloads: downloads
+
+deposits:                   # put or symlink the deposit folders here, or set their paths in config.local.yaml
+  immdict: data/erv_immdict_deposit
+  perturbseq: data/geiger_bmdc_deposit
+
+tabula_muris:
+  global_rds: downloads/sce_global_umap_clusters.rds   # downloaded (5.1 GB) by `scbrowser build` when missing
+  global_rds_md5: a346b70d0e1e0936bf73bf39552355ed
+  global_rds_url: https://zenodo.org/records/18765151/files/sce_global_umap_clusters.rds?download=1
+  immune_rds: null          # optional immune-subset SCE (not public); adds a second UMAP when set
+  # genes dumped from the immune object to check it shares the global expression values
+  check_genes: [Gapdh, Ptprc, Cd74, Zeb2, Gm20703]
+  # labelled maps shown beside the expression UMAP; the build draws them (global by tissue, immune by cell type)
+  # unless an image is set here, which must be drawn from the same embedding
+  map_images:
+    global: null
+    immune: null
+
+annotations:                # downloaded by `scbrowser build` when missing
+  mouse_m38_gtf: downloads/gencode.vM38.primary_assembly.annotation.gtf.gz
+  mouse_m38_gtf_url: https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_mouse/release_M38/gencode.vM38.primary_assembly.annotation.gtf.gz
+  human_v43_gtf: downloads/gencode.v43.annotation.gtf.gz
+  human_v43_gtf_url: https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_43/gencode.v43.annotation.gtf.gz
+  mgi_markers: downloads/MRK_List2.rpt
+  mgi_markers_url: https://www.informatics.jax.org/downloads/reports/MRK_List2.rpt
+  hgnc: downloads/hgnc_complete_set.txt
+  hgnc_url: https://storage.googleapis.com/public-download-files/hgnc/tsv/tsv/hgnc_complete_set.txt
+
+cytokine_families: preprocess/resources/cytokine_families_authors.tsv
+aliases: aliases.tsv
+
+datasets:
+  tabula_muris:
+    title: Tabula Muris
+    description: >-
+      Tabula Muris / Tabula Senis FACS SmartSeq2 cells (3, 18 and 24 months) requantified with Salmon against
+      GENCODE vM38 (adds lncRNAs). Expression is log(CPM + 1) (natural log).
+    citation: >-
+      Tabula Muris Consortium, Nature 2018 and 2020; reanalysis: Malekos, Smaliy & Carpenter, bioRxiv 2026
+      (doi:10.64898/2026.02.23.707583), data at Zenodo 18765151.
+  mouse_cytokine:
+    title: Mouse Immune Dictionary
+    description: >-
+      Immune Dictionary (GEO GSE202186) reprocessed: 309,036 cells in 25 cell types, 86 cytokines vs PBS.
+      edgeR quasi-likelihood tests on per-mouse pseudobulks (~ batch + cytokine) for 12 cell types.
+    citation: Cui et al., Nature 2024 (GSE202186); reprocessing and DE as described in the ERV manuscript deposit.
+  human_cytokine:
+    title: Human Cytokine Dictionary
+    description: >-
+      Parse Biosciences 10 Million Human PBMCs (9,697,974 cells, 12 donors, 90 cytokines vs PBS). edgeR
+      quasi-likelihood tests on donor pseudobulks (~ donor + cytokine) for 18 cell types.
+    citation: Oesinghaus et al. (Parse Biosciences 10M PBMC cytokine dataset); pseudobulks and DE from the ERV manuscript deposit.
+    licence: Human data derive from a CC BY-NC 4.0 dataset; reuse is restricted to non-commercial purposes.
+  perturbseq:
+    title: BMDC Perturb-seq
+    description: >-
+      Geiger-Schuller E3-ligase Perturb-seq in mouse bone-marrow-derived dendritic cells (LPS 3 h; 1,130 targets),
+      reprocessed. Per-target edgeR QL tests (KO vs non-targeting, channel-paired) on a fixed set of 2,300 genes.
+    citation: Geiger-Schuller et al. (GEO GSE327057); reprocessing as described in the deposit README.

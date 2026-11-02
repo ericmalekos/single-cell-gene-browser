@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "scbrowser"
+version = "0.1.0"
+description = "Panel + Bokeh gene browser for Tabula Muris, the mouse and human cytokine dictionaries and BMDC Perturb-seq"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "panel>=1.10,<2",
+    "bokeh>=3.10,<4",
+    "numpy>=1.26",
+    "pandas>=2.2",
+    "pyarrow>=14",
+    "scipy>=1.11",
+    "h5py>=3.10",
+    "pyyaml>=6",
+    "matplotlib>=3.8",   # build only: draws the labelled Tabula Muris maps
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "pyflakes"]
+
+[project.scripts]
+scbrowser = "scbrowser.cli:main"
+
+[tool.setuptools]
+packages = ["scbrowser", "scbrowser.views", "scbrowser.plots", "preprocess"]
+
+[tool.setuptools.package-data]
+preprocess = ["*.R", "resources/*.tsv"]
+scbrowser = ["methods/*.md"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
