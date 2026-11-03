@@ -20,7 +20,8 @@ metadata come from the consortium's public bucket (`s3://czb-tabula-muris-senis`
   granulocyte, hematopoietic stem cell, macrophage, microglial cell, monocyte, myeloid dendritic cell, neutrophil and
   NK cell): recomputed on the subset. Highly variable genes are those with a biological variance component above 0.5
   (the top 3,000 if fewer than 1,000 pass); then 50 principal components, UMAP (10 neighbours, min_dist 0.5) and
-  Louvain clustering (k = 20), giving 12 clusters. Expression values are the same cells' values in the global object.
+  Louvain clustering (k = 20), giving 12 clusters. Expression values are the same cells' values in the global object. Processed object:
+  [Zenodo, doi:10.5281/zenodo.23926318](https://doi.org/10.5281/zenodo.23926318).
 - Highly variable gene selection, PCA and UMAP were run with the random seed 42.
 
 #### What this tab shows

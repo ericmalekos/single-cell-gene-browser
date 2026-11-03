@@ -1,13 +1,13 @@
 # Copy to config.local.yaml (git-ignored) and set the paths that differ on your machine.
 # Any key of config.yaml can be overridden; relative paths resolve against this directory.
 
-deposits:
-  immdict: /path/to/erv_immdict_deposit        # mouse Immune Dictionary + human Cytokine Dictionary deposit
-  perturbseq: /path/to/geiger_bmdc_deposit     # BMDC E3-ligase Perturb-seq deposit
+# deposits:                                    # copies you already have (otherwise downloaded from Zenodo)
+#   immdict: /path/to/erv_immdict_deposit        # mouse Immune Dictionary + human Cytokine Dictionary deposit
+#   perturbseq: /path/to/geiger_bmdc_deposit     # BMDC E3-ligase Perturb-seq deposit
 
 tabula_muris:
   # global_rds: /path/to/sce_global_umap_clusters.rds   # skip the 5.1 GB download if you already have it
-  # immune_rds: /path/to/sce_subset_all_ages_pca_umap.rds
+  # immune_rds: /path/to/sce_subset_all_ages_pca_umap.rds   # skip the 1.3 GB download; null leaves the subset out
   # map_images:                                    # your own labelled UMAPs, instead of the drawn ones
   #   immune: /path/to/immune_cells_labelled.png
 

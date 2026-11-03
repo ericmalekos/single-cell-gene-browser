@@ -16,8 +16,9 @@ import sys
 import time
 from pathlib import Path
 
-from preprocess.inputs import DEPOSIT_LABELS, deposit_missing, r_status, store_status
-from scbrowser.config import load_config, resolve
+from preprocess.inputs import (DEPOSIT_FILES, DEPOSIT_LABELS, ZENODO_FILE_URL, deposit_missing, r_status,
+                               store_status, zenodo_record)
+from scbrowser.config import get_path, load_config, resolve
 
 STEPS = ["downloads", "annotations", "cytokine", "perturbseq", "tabula_muris", "tm_maps"]
 
@@ -49,17 +50,33 @@ def download(url: str, dest: Path, md5: str | None = None) -> None:
         log(f"md5 ok: {dest.name}")
 
 
+def download_deposit(key: str) -> None:
+    """Fetch the deposit files the build needs that are not there yet, md5-checked against the record's MD5SUMS.txt."""
+    folder, record = get_path("deposits", key), zenodo_record(key)
+    missing = [f for f in DEPOSIT_FILES[key] if not (folder / f).exists()]
+    if not missing:
+        log(f"have {DEPOSIT_LABELS[key]} ({folder})")
+        return
+    log(f"{DEPOSIT_LABELS[key]}: downloading {len(missing)} file(s) from Zenodo record {record}")
+    sums = folder / "MD5SUMS.txt"
+    download(ZENODO_FILE_URL.format(record=record, name="MD5SUMS.txt"), sums)
+    md5s = dict(reversed(line.split(maxsplit=1)) for line in sums.read_text().splitlines() if line.strip())
+    for name in missing:
+        download(ZENODO_FILE_URL.format(record=record, name=name), folder / name, md5=md5s[name])
+
+
 def plan(requested: set[str] | None) -> tuple[list[str], list[str]]:
     """Steps to run and notes about the ones skipped."""
+    steps = [s for s in STEPS if requested is None or s in requested]
     blockers = {}
     for step, key in (("cytokine", "immdict"), ("perturbseq", "perturbseq")):
         missing = deposit_missing(key)
-        if missing:
+        # the downloads step fetches a missing deposit when its Zenodo record is set
+        if missing and not ("downloads" in steps and zenodo_record(key) and get_path("deposits", key)):
             blockers[step] = f"{DEPOSIT_LABELS[key]} incomplete (missing {missing[0]})"
     ok, r_desc = r_status()
     if not ok:
         blockers["tabula_muris"] = r_desc
-    steps = [s for s in STEPS if requested is None or s in requested]
     if not store_status()["tabula_muris"] and ("tabula_muris" not in steps or "tabula_muris" in blockers):
         blockers["tm_maps"] = "the Tabula Muris store is not built"
     forced = [s for s in steps if requested is not None and s in blockers]
@@ -86,8 +103,13 @@ def main(argv: list[str] | None = None) -> None:
         ann, tm = cfg["annotations"], cfg["tabula_muris"]
         for key in ("mgi_markers", "hgnc", "mouse_m38_gtf", "human_v43_gtf"):
             download(ann[f"{key}_url"], resolve(ann[key]))
+        for step, key in (("cytokine", "immdict"), ("perturbseq", "perturbseq")):
+            if step in steps:
+                download_deposit(key)
         if "tabula_muris" in steps:
             download(tm["global_rds_url"], resolve(tm["global_rds"]), md5=tm["global_rds_md5"])
+            if tm.get("immune_rds") and tm.get("immune_rds_url"):
+                download(tm["immune_rds_url"], resolve(tm["immune_rds"]), md5=tm.get("immune_rds_md5"))
     if "annotations" in steps:
         run(py, "-m", "preprocess.annotations")
     if "cytokine" in steps:

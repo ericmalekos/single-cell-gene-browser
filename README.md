@@ -6,10 +6,10 @@ sortable table you can download as CSV.
 
 | Tab | Data | Figure |
 |---|---|---|
-| Tabula Muris | Tabula Muris / Senis FACS SmartSeq2, requantified against GENCODE vM38 ([Zenodo 18765151](https://zenodo.org/records/18765151)): 109,429 cells, plus an optional immune subset | UMAP colored by log(CPM+1), beside a labelled map (tissue of origin, or cell type for the immune subset); top-20 tissue / cell-type violins |
-| Mouse Immune Dictionary | Immune Dictionary (GSE202186) reprocessed; edgeR vs PBS for 12 cell types | cell type × cytokine dot plot |
-| Human Cytokine Dictionary | Parse 10M PBMC; edgeR vs PBS for 18 cell types | the same dot plot |
-| BMDC Perturb-seq | E3-ligase Perturb-seq (GSE327057); per-target edgeR | volcano, with the gene as readout or as KO target; a list of the 1,130 KO targets |
+| Tabula Muris | Tabula Muris / Senis FACS SmartSeq2, requantified against GENCODE vM38 ([Zenodo 18765151](https://zenodo.org/records/18765151)): 109,429 cells, plus an immune subset of 30,411 cells ([Zenodo 23926318](https://doi.org/10.5281/zenodo.23926318)) | UMAP colored by log(CPM+1), beside a labelled map (tissue of origin, or cell type for the immune subset); top-20 tissue / cell-type violins |
+| Mouse Immune Dictionary | Immune Dictionary (GSE202186) reprocessed; edgeR vs PBS for 12 cell types ([Zenodo 23896882](https://doi.org/10.5281/zenodo.23896882)) | cell type × cytokine dot plot |
+| Human Cytokine Dictionary | Parse 10M PBMC; edgeR vs PBS for 18 cell types (same Zenodo record) | the same dot plot |
+| BMDC Perturb-seq | E3-ligase Perturb-seq (GSE327057) reprocessed; per-target edgeR ([Zenodo 23896808](https://doi.org/10.5281/zenodo.23896808)) | volcano, with the gene as readout or as KO target; a list of the 1,130 KO targets |
 
 ## Install
 
@@ -45,24 +45,26 @@ in one of three ways:
 
 Then skip to [Run](#run).
 
-### B. Build from the deposits
+### B. Build from the Zenodo deposits
 
-1. **Get the inputs.** The build needs:
+1. **Inputs.** `scbrowser build` downloads everything except R, and checks each file's md5:
 
-   | input | where it comes from | needed for |
+   | input | Zenodo record | needed for |
    |---|---|---|
-   | `erv_immdict_deposit/` | the Immune / Cytokine Dictionary deposit | the two cytokine tabs |
-   | `geiger_bmdc_deposit/` | the BMDC Perturb-seq deposit | the Perturb-seq tab |
-   | Tabula Muris object (5.1 GB) | downloaded automatically from Zenodo (md5-checked) | the Tabula Muris tab |
-   | GENCODE vM38 and v43 GTFs, MGI and HGNC symbol tables | downloaded automatically | Ensembl ID and alias search |
+   | Immune / Cytokine Dictionary deposit (1.8 GB of it) | [23896882](https://doi.org/10.5281/zenodo.23896882) | the two cytokine tabs |
+   | BMDC Perturb-seq deposit (1.9 GB of it) | [23896808](https://doi.org/10.5281/zenodo.23896808) | the Perturb-seq tab |
+   | Tabula Muris object (5.1 GB) | [18765151](https://zenodo.org/records/18765151) | the Tabula Muris tab |
+   | Tabula Muris immune subset (1.3 GB) | [23926318](https://doi.org/10.5281/zenodo.23926318) | its second UMAP embedding |
+   | GENCODE vM38 and v43 GTFs, MGI and HGNC symbol tables | (from GENCODE, MGI and HGNC) | Ensembl ID and alias search |
    | R with the `Matrix` package | system R, or `conda install -c conda-forge r-base r-matrix` | Tabula Muris export only |
 
-2. **Place the deposits.** Put or symlink the two deposit folders into `data/`. Alternatively, copy
-   `config.local.example.yaml` to `config.local.yaml` and set their paths there.
+   The deposit files go to `data/`; the others go to `downloads/`. The human files of the cytokine deposit are
+   derived from the Parse dataset and carry its CC BY-NC 4.0 non-commercial term.
 
-   In `config.local.yaml` you can also:
-   - point to an existing copy of the Tabula Muris object (to skip the download);
-   - add the optional immune-subset SCE (`tabula_muris.immune_rds`), which becomes a second UMAP embedding;
+2. **Optional: use copies you already have.** Copy `config.local.example.yaml` to `config.local.yaml` and set
+   their paths there. The build then downloads only what is missing. In `config.local.yaml` you can also:
+   - point to existing copies of the Tabula Muris objects (to skip those downloads);
+   - leave out the immune subset (`tabula_muris.immune_rds: null`);
    - use your own labelled UMAP figures instead of the drawn maps (`tabula_muris.map_images`). Each figure must
      show the same embedding as the app, or it will not line up with the expression UMAP.
 
@@ -73,8 +75,8 @@ Then skip to [Run](#run).
    scbrowser build      # downloads what is missing, then builds every store it has inputs for
    ```
 
-   A complete build takes about 5 minutes. Expect:
-   - about 15 GB of disk: the Tabula Muris object, `app_data/` and the downloads;
+   Once the inputs are downloaded, a complete build takes about 5 minutes. Expect:
+   - about 20 GB of disk: the downloads (about 10 GB) and `app_data/`;
    - about 25 GB of RAM during the Tabula Muris export.
 
    Steps whose inputs are missing are skipped, and the app shows those tabs as "not built". To rebuild one step,
@@ -191,7 +193,7 @@ Each tab ends with a collapsed **Methods** section, written from the deposit REA
 
 ```
 config.yaml                defaults (tracked); config.local.yaml holds machine-specific paths (ignored)
-data/                      deposits, placed or symlinked by you (ignored)
+data/                      deposits, downloaded by `scbrowser build` or placed by you (ignored)
 macos/                     Mac installer, launcher and icon
 preprocess/                builders behind `scbrowser build`, the R export and resources/
 scbrowser/                 the app: cli, config, gene index, stores, plots/, views/, methods/ (tab texts), ui.py, app.py

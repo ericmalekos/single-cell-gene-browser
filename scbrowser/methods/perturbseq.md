@@ -2,7 +2,7 @@
 The E3-ligase Perturb-seq screen of Geiger-Schuller et al. in mouse bone-marrow-derived dendritic cells stimulated
 with LPS for 3 h. It targets 1,130 E3 ligases, partners and substrates with 3 guides each, plus non-targeting and
 cutting-control guides ([GEO GSE327057](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE327057)). The
-reprocessed data come from the deposit described in its README.
+reprocessed counts and DE results are deposited at [Zenodo, doi:10.5281/zenodo.23896808](https://doi.org/10.5281/zenodo.23896808); its README describes every file.
 
 #### Reprocessing
 - Reads were aligned with STARsolo (STAR 2.7.11b) to GRCm39 with GENCODE vM39 (Ensembl 116), 10x 3' v3 chemistry.

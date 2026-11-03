@@ -5,7 +5,7 @@ import shutil
 import subprocess
 from pathlib import Path
 
-from scbrowser.config import app_data, get_path
+from scbrowser.config import app_data, get_path, load_config
 
 DEPOSIT_FILES = {
     "immdict": ["immdict_mouse_cellbender_counts.h5ad", "mouse_edgeR.tar", "human_pseudobulk_all.h5",
@@ -14,6 +14,7 @@ DEPOSIT_FILES = {
                    "empirical_fdr_global_calls.tsv", "geiger_bmdc_e3_genefull_counts.h5ad"],
 }
 DEPOSIT_LABELS = {"immdict": "Immune / Cytokine Dictionary deposit", "perturbseq": "Perturb-seq deposit"}
+ZENODO_FILE_URL = "https://zenodo.org/records/{record}/files/{name}?download=1"
 STORES = {
     "annotations": "annotations/id2symbol.parquet",
     "cytokine_mouse": "cytokine_mouse/meta.json",
@@ -31,6 +32,11 @@ def deposit_missing(key: str) -> list[Path]:
     if d is None or not d.is_dir():
         return [d if d is not None else Path(f"<deposits.{key} not set>")]
     return [d / f for f in DEPOSIT_FILES[key] if not (d / f).exists()]
+
+
+def zenodo_record(key: str) -> int | None:
+    """Zenodo record a deposit is downloaded from (None: not set, so the files must be placed by hand)."""
+    return (load_config().get("zenodo") or {}).get(key)
 
 
 def r_status() -> tuple[bool, str]:

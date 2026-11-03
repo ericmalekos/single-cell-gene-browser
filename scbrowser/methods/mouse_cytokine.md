@@ -40,4 +40,4 @@ batches) were reprocessed for the ERV manuscript; cell-type labels are the autho
 #### References
 - Cui A, et al. Dictionary of immune responses to cytokines at single-cell resolution. *Nature* 625, 377–384 (2024).
   [doi:10.1038/s41586-023-06816-9](https://doi.org/10.1038/s41586-023-06816-9)
-- Reprocessing, pseudobulks and DE: the ERV manuscript's data deposit and its README.
+- Reprocessing, pseudobulks and DE: [Zenodo, doi:10.5281/zenodo.23896882](https://doi.org/10.5281/zenodo.23896882), with its README.

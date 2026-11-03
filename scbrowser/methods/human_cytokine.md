@@ -32,4 +32,4 @@ distributed under CC BY-NC 4.0, so reuse is restricted to non-commercial purpose
 - Oesinghaus L, et al. A single-cell cytokine dictionary of human peripheral blood. *bioRxiv* (2025).
   [doi:10.64898/2025.12.12.693897](https://doi.org/10.64898/2025.12.12.693897)
 - [Parse Biosciences: 10 million human PBMCs in a single experiment](https://www.parsebiosciences.com/datasets/10-million-human-pbmcs-in-a-single-experiment/)
-- Pseudobulks and DE: the ERV manuscript's data deposit and its README.
+- Pseudobulks and DE: [Zenodo, doi:10.5281/zenodo.23896882](https://doi.org/10.5281/zenodo.23896882), with its README. Its human files carry the Parse dataset's CC BY-NC 4.0 term.

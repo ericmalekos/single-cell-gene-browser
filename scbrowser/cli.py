@@ -9,7 +9,7 @@ import sys
 from pathlib import Path
 
 from . import __version__
-from .config import app_data, config_path, get_path, local_config_path
+from .config import app_data, config_path, get_path, load_config, local_config_path
 
 
 def _row(status: str, label: str, detail: str = "") -> None:
@@ -17,7 +17,7 @@ def _row(status: str, label: str, detail: str = "") -> None:
 
 
 def cmd_check(args) -> int:
-    from preprocess.inputs import DEPOSIT_LABELS, deposit_missing, r_status, store_status
+    from preprocess.inputs import DEPOSIT_LABELS, deposit_missing, r_status, store_status, zenodo_record
 
     local = local_config_path()
     print(f"scbrowser {__version__}")
@@ -26,7 +26,9 @@ def cmd_check(args) -> int:
     print("Inputs (needed only to build)")
     for key, label in DEPOSIT_LABELS.items():
         missing = deposit_missing(key)
-        if missing:
+        if missing and zenodo_record(key):
+            _row("download", label, f"Zenodo {zenodo_record(key)} -> {get_path('deposits', key)}")
+        elif missing:
             _row("MISSING", label, f"{missing[0]}" + (f" (+{len(missing) - 1} more)" if len(missing) > 1 else ""))
         else:
             _row("ok", label, str(get_path("deposits", key)))
@@ -38,7 +40,8 @@ def cmd_check(args) -> int:
     if immune is None:
         _row("optional", "Tabula Muris immune subset", "not configured")
     else:
-        _row("ok" if immune.exists() else "MISSING", "Tabula Muris immune subset", str(immune))
+        fetch = "download" if load_config()["tabula_muris"].get("immune_rds_url") else "MISSING"
+        _row("ok" if immune.exists() else fetch, "Tabula Muris immune subset (1.3 GB)", str(immune))
     print("\nStores (what the app reads)")
     stores = store_status()
     for name, built in stores.items():
