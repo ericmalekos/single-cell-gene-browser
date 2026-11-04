@@ -1,12 +1,14 @@
 # conda env create -f environment.yml    (run from the repository root)
-# Conda provides Python only; the app and its dependencies are pip-installed (fast to solve).
-# Building the Tabula Muris store also needs R with the Matrix package (system R, or add r-base and r-matrix).
+# Conda provides Python and R (with Matrix, for the Tabula Muris export); the app and its Python dependencies are
+# pip-installed.
 name: gene_browser
 channels:
   - conda-forge
   - nodefaults
 dependencies:
   - python=3.12
+  - r-base
+  - r-matrix
   - pip
   - pip:
       - "-e .[dev]"

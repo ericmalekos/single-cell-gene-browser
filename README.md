@@ -16,13 +16,14 @@ sortable table you can download as CSV.
 You need conda (or Python ≥ 3.11).
 
 ```bash
-git clone <repository-url> gene_browser
+git clone https://github.com/ericmalekos/single-cell-gene-browser.git gene_browser
 cd gene_browser
-conda env create -f environment.yml      # installs the app and the `scbrowser` command
+conda env create -f environment.yml      # installs the app, the `scbrowser` command and R
 conda activate gene_browser
 ```
 
-Without conda, use a virtual environment instead:
+Without conda, use a virtual environment instead (building the Tabula Muris tab then needs R with the `Matrix`
+package on the PATH):
 
 ```bash
 python -m venv .venv
@@ -47,7 +48,7 @@ Then skip to [Run](#run).
 
 ### B. Build from the Zenodo deposits
 
-1. **Inputs.** `scbrowser build` downloads everything except R, and checks each file's md5:
+1. **Inputs.** `scbrowser build` downloads the data below, checking each file's md5 (R comes with the conda environment):
 
    | input | Zenodo record | needed for |
    |---|---|---|
@@ -56,7 +57,7 @@ Then skip to [Run](#run).
    | Tabula Muris object (5.1 GB) | [18765151](https://zenodo.org/records/18765151) | the Tabula Muris tab |
    | Tabula Muris immune subset (1.3 GB) | [23926318](https://doi.org/10.5281/zenodo.23926318) | its second UMAP embedding |
    | GENCODE vM38 and v43 GTFs, MGI and HGNC symbol tables | (from GENCODE, MGI and HGNC) | Ensembl ID and alias search |
-   | R with the `Matrix` package | system R, or `conda install -c conda-forge r-base r-matrix` | Tabula Muris export only |
+   | R with the `Matrix` package | installed by `environment.yml` (or system R) | Tabula Muris export only |
 
    The deposit files go to `data/`; the others go to `downloads/`. The human files of the cytokine deposit are
    derived from the Parse dataset and carry its CC BY-NC 4.0 non-commercial term.
